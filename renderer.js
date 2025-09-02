@@ -3,7 +3,7 @@ const editor = document.getElementById("editor");
 const preview = document.getElementById("preview");
 const charcount = document.getElementById("charcount");
 
-editor.value = localStorage.getItem(STORAGE_KEY) || "# Title\n";
+editor.value = localStorage.getItem(STORAGE_KEY) || "";
 render();
 
 function render() {
@@ -42,7 +42,7 @@ confirmDeploy.addEventListener("click", () => {
   const category = document.getElementById("deployCategory").value.trim(); 
   const content = editor.value;
   const slug = date + "-" + title + ".md";
-  const path = `content/${category}/${slug}`;
+  const path = `client/public/content/${category}/${slug}`;
   const message = `OTTO Commit: ${title} published.`;
 
   window.api.pushToGitHub(path, message, content)

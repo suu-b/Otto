@@ -1,7 +1,6 @@
 const { Octokit } = require("@octokit/rest");
-require('dotenv').config();
 
-const TOKEN = process.env.token;
+const TOKEN = process.env.GITHUB_TOKEN;
 
 if (!TOKEN) {
   throw new Error("GitHub token not found in environment variables.");
@@ -10,7 +9,7 @@ if (!TOKEN) {
 const octokit = new Octokit({ auth: TOKEN });
 
 const owner = "suu-b";  
-const repo = "super-duper-disco";     
+const repo = "Preface";     
 
 const pushToGitHub = async (path, message, content) => {
     const contentEncoded = Buffer.from(content).toString("base64");
