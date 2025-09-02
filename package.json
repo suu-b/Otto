@@ -1,0 +1,28 @@
+{
+  "name": "otto",
+  "version": "1.0.0",
+  "description": "article editor and deployment pipeline",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suu-b/Otto.git"
+  },
+  "keywords": [
+    "git",
+    "pipeline",
+    "text-editor"
+  ],
+  "author": "suu-b",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/suu-b/Otto/issues"
+  },
+  "homepage": "https://github.com/suu-b/Otto#readme",
+  "devDependencies": {
+    "electron": "^37.4.0"
+  }
+}
