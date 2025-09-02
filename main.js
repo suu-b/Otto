@@ -6,8 +6,9 @@ function createWindow() {
   const icon = nativeImage.createFromPath(iconPath);
 
   const win = new BrowserWindow({
-    width: 800,
-    height: 800,
+    width: 1000,
+    height: 700,
+    show: false,
     icon, 
     webPreferences: {
       preload: path.join(__dirname, 'renderer.js')
@@ -17,7 +18,7 @@ function createWindow() {
   if (process.platform === 'linux') {
     app.dock?.setIcon(icon); 
   }
-
+  win.maximize();
   win.loadFile('index.html');
 }
 

@@ -1,12 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>My Electron App</title>
-  </head>
-  <body>
-    <h1>Hello from Electron!</h1>
-    <p>If you see this, Milestone 1 is done.</p>
-    <script src="./renderer.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Markdown Editor</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- CDN scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
+</head>
+<body>
+  <div class="app">
+    <div class="panel editor-wrap">
+      <header>
+  <div class="title">Editor</div>
+  <div class="toolbar">
+    <button id="deployBtn">Deploy</button>
+  </div>
+</header>
+
+<!-- Modal dialog -->
+<div id="deployModal" class="modal">
+  <div class="modal-content">
+    <h2>Save Article</h2>
+    <hr>
+    <label>Title<input type="text" id="deployTitle"></label>
+    <label>Date<input type="date" id="deployDate"></label>
+    <label>Description<input id="deployDesc"></input></label>
+    <label>Category
+  <select id="deployCategory">
+    <option value="journal">Journal</option>
+    <option value="meditation">Meditation</option>
+    <option value="media">Media</option>
+    <option value="cerebrum">Cerebrum</option>
+    <option value="art">Art</option>
+    <option value="poetry">Poetry</option>
+  </select>
+</label>
+
+    <label>Thumbnail<input type="text" placeholder="optional" id="deployImg"></label>
+    <div class="modal-actions">
+      <button id="confirmDeploy">Deploy</button>
+      <button id="closeDeploy">Cancel</button>
+    </div>
+  </div>
+</div>
+      <textarea id="editor" placeholder="# type the article's body here...."></textarea>
+      <div class="footer">
+        <div class="muted">ctrl/cmd + s to save .md</div>
+        <div class="muted" id="charcount">0 chars</div>
+      </div>
+    </div>
+    <div class="split-resize"></div>
+    <div class="panel">
+      <header>
+        <div class="title">Preview</div>
+      </header>
+      <div id="preview" class="preview"></div>
+    </div>
+  </div>
+  <script src="./renderer.js"></script>
+</body>
 </html>

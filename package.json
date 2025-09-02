@@ -24,5 +24,9 @@
   "homepage": "https://github.com/suu-b/Otto#readme",
   "devDependencies": {
     "electron": "^37.4.0"
+  },
+  "dependencies": {
+    "dompurify": "^3.2.6",
+    "marked": "^16.2.1"
   }
 }
