@@ -2,8 +2,6 @@ const STORAGE_KEY = "simple_md_editor_content_v1";
 const editor = document.getElementById("editor");
 const preview = document.getElementById("preview");
 const charcount = document.getElementById("charcount");
-const appEl = document.querySelector(".app");
-const splitter = document.querySelector(".split-resize");
 
 editor.value = localStorage.getItem(STORAGE_KEY) || "# Title\n";
 render();
@@ -24,22 +22,6 @@ editor.addEventListener("input", () => {
   }, 700);
 });
 
-function wrapSelection(before, after) {
-  const start = editor.selectionStart;
-  const end = editor.selectionEnd;
-  const selected = editor.value.slice(start, end) || "text";
-  editor.value =
-    editor.value.slice(0, start) +
-    before +
-    selected +
-    after +
-    editor.value.slice(end);
-  editor.focus();
-  editor.setSelectionRange(start + before.length, start + before.length + selected.length);
-  render();
-}
-
-
 const deployBtn = document.getElementById("deployBtn");
 const deployModal = document.getElementById("deployModal");
 const closeDeploy = document.getElementById("closeDeploy");
@@ -54,11 +36,18 @@ closeDeploy.addEventListener("click", () => {
 });
 
 confirmDeploy.addEventListener("click", () => {
-  const title = document.getElementById("deployTitle").value;
-  const date = document.getElementById("deployDate").value;
-  const desc = document.getElementById("deployDesc").value;
-  const img = document.getElementById("deployImg").value;
+  const title = document.getElementById("deployTitle").value.trim();
+  const date = document.getElementById("deployDate").value.trim();
+  const desc = document.getElementById("deployDesc").value.trim();
+  const category = document.getElementById("deployCategory").value.trim(); 
+  const content = editor.value;
+  const slug = date + "-" + title + ".md";
+  const path = `content/${category}/${slug}`;
+  const message = `OTTO Commit: ${title} published.`;
 
-  console.log({ title, date, desc, img });
+  window.api.pushToGitHub(path, message, content)
+    .then(() => console.log(`Deployed ${path} successfully!`))
+    .catch(err => console.error(err));
+
   deployModal.style.display = "none";
 });
