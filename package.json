@@ -18,7 +18,10 @@
     "pipeline",
     "text-editor"
   ],
-  "author": "suu-b",
+  "author": {
+    "name": "suu-b",
+    "email": "suub.author@gmail.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/suu-b/Otto/issues"

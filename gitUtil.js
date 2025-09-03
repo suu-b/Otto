@@ -22,10 +22,61 @@ const pushToGitHub = async (path, message, content) => {
             content: contentEncoded,    
         });
         console.log("File pushed to GitHub successfully.");
+        return true;
     }
     catch(error){  
         console.error("Error pushing file to GitHub:", error);
+        throw error;
     }
 }
 
-module.exports = pushToGitHub;
+const readFileFromGitHub = async (path) => {
+    try{
+        const { data } = await octokit.repos.getContent({
+            owner, repo, path
+        });
+        
+        if (data.content) {
+            const decodedContent = Buffer.from(data.content, 'base64').toString('utf-8');
+            return decodedContent;
+        }
+        return data;
+    }
+    catch(error){
+        // If file doesn't exist (404) or any other error, return empty string
+        if (error.status === 404) {
+            console.log(`File ${path} not found, returning empty string`);
+            return "";
+        }
+        console.error("Some error occurred:", error);
+        return ""; // Return empty string for any other errors too
+    }
+} 
+
+const updateOnGitHub = async (path, message, content) => {
+    const contentEncoded = Buffer.from(content).toString("base64");
+    try {
+        const { data: currentFile } = await octokit.repos.getContent({
+            owner,
+            repo,
+            path
+        });
+        
+        await octokit.repos.createOrUpdateFileContents({
+            owner,
+            repo,
+            path,
+            message,
+            content: contentEncoded,
+            sha: currentFile.sha
+        });
+        console.log("File updated on GitHub successfully.");
+        return true;
+    }
+    catch (error){
+        console.error("Error updating on github", error);
+        throw error;
+    }
+}
+
+module.exports = { pushToGitHub, updateOnGitHub, readFileFromGitHub };

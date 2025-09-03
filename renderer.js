@@ -35,19 +35,74 @@ closeDeploy.addEventListener("click", () => {
   deployModal.style.display = "none";
 });
 
-confirmDeploy.addEventListener("click", () => {
-  const title = document.getElementById("deployTitle").value.trim();
-  const date = document.getElementById("deployDate").value.trim();
-  const desc = document.getElementById("deployDesc").value.trim();
-  const category = document.getElementById("deployCategory").value.trim(); 
-  const content = editor.value;
-  const slug = date + "-" + title + ".md";
-  const path = `client/public/content/${category}/${slug}`;
-  const message = `OTTO Commit: ${title} published.`;
+confirmDeploy.addEventListener("click", async () => {
+  try {
+    const title = document.getElementById("deployTitle").value.trim();
+    const date = document.getElementById("deployDate").value.trim();
+    const desc = document.getElementById("deployDesc").value.trim();
+    const category = document.getElementById("deployCategory").value.trim();
+    const content = editor.value.trim();
 
-  window.api.pushToGitHub(path, message, content)
-    .then(() => console.log(`Deployed ${path} successfully!`))
-    .catch(err => console.error(err));
+    if (!title || !date || !desc || !category || !content) {
+      throw new Error("All fields are required");
+    }
 
-  deployModal.style.display = "none";
+    const slug = `${date}-${title.replace(/[^a-zA-Z0-9]/g, '-')}.md`;
+    const contentPath = `client/public/content/${category}/${slug}`;
+    const indexFilePath = `client/public/index/${category}.csv`;
+    
+    const contentMessage = `OTTO Commit: ${title} published`;
+    const indexMessage = `OTTO Commit: ${title} logged`;
+
+    confirmDeploy.disabled = true;
+    confirmDeploy.textContent = "Deploying...";
+
+    try {
+      const indexedContent = await window.api.readFileFromGitHub(indexFilePath);
+      if (!indexedContent) {
+        throw new Error("Failed to read index file");
+      }
+      
+      const updatedContent = `${indexedContent}\n${date},${title},${desc}`;
+      await window.api.updateOnGitHub(indexFilePath, indexMessage, updatedContent);
+      console.log("Index updated successfully");
+    } catch (error) {
+      console.error("Failed to update index:", error);
+      throw new Error("Failed to update index file");
+    }
+
+    try {
+      await window.api.pushToGitHub(contentPath, contentMessage, content);
+      console.log(`Deployed ${contentPath} successfully!`);
+      
+      showNotification("Deployment successful!", "success");
+      deployModal.style.display = "none";
+      resetDeployForm();
+      
+    } catch (error) {
+      console.error("Failed to deploy content:", error);
+      throw new Error("Failed to deploy content file");
+    }
+
+  } catch (error) {
+    console.error("Deployment failed:", error);
+    showNotification(`Deployment failed: ${error.message}`, "error");
+  } finally {
+    confirmDeploy.disabled = false;
+    confirmDeploy.textContent = "Deploy";
+  }
 });
+
+function showNotification(message, type = "info") {
+  alert(`${type.toUpperCase()}: ${message}`);
+}
+
+function resetDeployForm() {
+  document.getElementById("deployTitle").value = "";
+  document.getElementById("deployDate").value = "";
+  document.getElementById("deployDesc").value = "";
+  document.getElementById("deployCategory").value = "";
+  if (editor && editor.value) {
+    editor.value = "";
+  }
+}
