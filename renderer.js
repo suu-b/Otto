@@ -47,7 +47,7 @@ confirmDeploy.addEventListener("click", async () => {
       throw new Error("All fields are required");
     }
 
-    const slug = `${date}-${title.replace(/[^a-zA-Z0-9]/g, '-')}.md`;
+    const slug = `${date}-${title}.md`;
     const contentPath = `client/public/content/${category}/${slug}`;
     const indexFilePath = `client/public/index/${category}.csv`;
     
