@@ -56,20 +56,48 @@ const readFileFromGitHub = async (path) => {
 const updateOnGitHub = async (path, message, content) => {
     const contentEncoded = Buffer.from(content).toString("base64");
     try {
-        const { data: currentFile } = await octokit.repos.getContent({
-            owner,
-            repo,
-            path
-        });
+        let sha = null;
         
-        await octokit.repos.createOrUpdateFileContents({
-            owner,
-            repo,
-            path,
-            message,
-            content: contentEncoded,
-            sha: currentFile.sha
-        });
+        try {
+            const { data: currentFile } = await octokit.repos.getContent({
+                owner,
+                repo,
+                path
+            });
+            sha = currentFile.sha;
+        } catch (error) {
+            if (error.status === 404) {
+                console.log(`File ${path} doesn't exist, will create new one with headers`);
+                sha = null;
+            } else {
+                throw error;
+            }
+        }
+        
+        let finalContent = content;
+        if (!sha) {
+            const headers = "date,title,description";
+            finalContent = headers + content;
+            const finalContentEncoded = Buffer.from(finalContent).toString("base64");
+            
+            await octokit.repos.createOrUpdateFileContents({
+                owner,
+                repo,
+                path,
+                message,
+                content: finalContentEncoded
+            });
+        } else {
+            await octokit.repos.createOrUpdateFileContents({
+                owner,
+                repo,
+                path,
+                message,
+                content: contentEncoded,
+                sha: sha
+            });
+        }
+        
         console.log("File updated on GitHub successfully.");
         return true;
     }

@@ -58,17 +58,13 @@ confirmDeploy.addEventListener("click", async () => {
     confirmDeploy.textContent = "Deploying...";
 
     try {
-      const indexedContent = await window.api.readFileFromGitHub(indexFilePath);
-      if (!indexedContent) {
-        throw new Error("Failed to read index file");
-      }
-      
+      const indexedContent = await window.api.readFileFromGitHub(indexFilePath);      
       const updatedContent = `${indexedContent}\n${date},${title},${desc}`;
       await window.api.updateOnGitHub(indexFilePath, indexMessage, updatedContent);
       console.log("Index updated successfully");
     } catch (error) {
       console.error("Failed to update index:", error);
-      throw new Error("Failed to update index file");
+      throw new Error(`Failed to update index file ${error}`);
     }
 
     try {
