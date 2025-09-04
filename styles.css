@@ -261,3 +261,17 @@ input[type=file] {
   background: #94a3b8;
   color: #0b0c0e;
 }
+
+input[type="date"] {
+  color-scheme: light;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button {
+  filter: invert(1);
+}

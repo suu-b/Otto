@@ -28,6 +28,8 @@ const closeDeploy = document.getElementById("closeDeploy");
 const confirmDeploy = document.getElementById("confirmDeploy");
 
 deployBtn.addEventListener("click", () => {
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("deployDate").value = today;
   deployModal.style.display = "flex";
 });
 
@@ -40,14 +42,16 @@ confirmDeploy.addEventListener("click", async () => {
     const title = document.getElementById("deployTitle").value.trim();
     const date = document.getElementById("deployDate").value.trim();
     const desc = document.getElementById("deployDesc").value.trim();
+    const thumbnail = document.getElementById("deployImg").value.trim();
+    const credits = document.getElementById("deployCredits").value.trim();
     const category = document.getElementById("deployCategory").value.trim();
     const content = editor.value.trim();
 
     if (!title || !date || !desc || !category || !content) {
-      throw new Error("All fields are required");
+      throw new Error("Title, date, description, category and content are required!");
     }
 
-    const slug = `${date}-${title}.md`;
+    const slug = `${date}-${slugify(title)}.md`;
     const contentPath = `client/public/content/${category}/${slug}`;
     const indexFilePath = `client/public/index/${category}.csv`;
     
@@ -59,7 +63,7 @@ confirmDeploy.addEventListener("click", async () => {
 
     try {
       const indexedContent = await window.api.readFileFromGitHub(indexFilePath);      
-      const updatedContent = `${indexedContent}\n${date},${title},${desc}`;
+      const updatedContent = `${indexedContent}\n${date},${title},${desc},${thumbnail},${credits}`;
       await window.api.updateOnGitHub(indexFilePath, indexMessage, updatedContent);
       console.log("Index updated successfully");
     } catch (error) {
@@ -89,6 +93,15 @@ confirmDeploy.addEventListener("click", async () => {
   }
 });
 
+function slugify(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9 -]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-") 
+    .trim();
+}
+
 function showNotification(message, type = "info") {
   alert(`${type.toUpperCase()}: ${message}`);
 }
@@ -97,6 +110,8 @@ function resetDeployForm() {
   document.getElementById("deployTitle").value = "";
   document.getElementById("deployDate").value = "";
   document.getElementById("deployDesc").value = "";
+  document.getElementById("deployCredits").value = "";
+  document.getElementById("deployImg").value = "";
   document.getElementById("deployCategory").value = "";
   if (editor && editor.value) {
     editor.value = "";

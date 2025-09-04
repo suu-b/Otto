@@ -76,7 +76,7 @@ const updateOnGitHub = async (path, message, content) => {
         
         let finalContent = content;
         if (!sha) {
-            const headers = "date,title,description";
+            const headers = "date,title,description,thumbnail,credits";
             finalContent = headers + content;
             const finalContentEncoded = Buffer.from(finalContent).toString("base64");
             
