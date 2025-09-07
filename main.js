@@ -1,7 +1,7 @@
 const { app, BrowserWindow, nativeImage, ipcMain } = require('electron');
 const path = require('path');
 
-const { readFileFromGitHub, updateOnGitHub, pushToGitHub } = require('./gitUtil');
+const { readFileFromGitHub, updateOnGitHub, pushToGitHub, deployToGitHub } = require('./gitUtil');
 
 function createWindow() {
   const iconPath = path.join(__dirname, 'assets/otto.png');
@@ -36,4 +36,8 @@ ipcMain.handle('update-on-github', async (event, { path, message, content }) => 
 
 ipcMain.handle('push-to-github', async (event, { path, message, content }) => {
   return pushToGitHub(path, message, content);
+});
+
+ipcMain.handle('deploy-to-github', async (event, { contentPath, indexPath, content, indexContent, message }) => {
+  return deployToGitHub(contentPath, indexPath, content, indexContent, message);
 });

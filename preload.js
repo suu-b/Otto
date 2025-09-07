@@ -9,5 +9,8 @@ contextBridge.exposeInMainWorld('api', {
   },
   readFileFromGitHub: (path) => {
     return ipcRenderer.invoke('read-from-github', { path });
+  },
+  deployToGitHub: (contentPath, indexPath, content, indexContent, message) => {
+    return ipcRenderer.invoke('deploy-to-github', { contentPath, indexPath, content, indexContent, message });
   }
 });

@@ -56,32 +56,24 @@ confirmDeploy.addEventListener("click", async () => {
     const indexFilePath = `client/public/index/${category}.csv`;
     
     const contentMessage = `OTTO Commit: ${title} published`;
-    const indexMessage = `OTTO Commit: ${title} logged`;
 
     confirmDeploy.disabled = true;
     confirmDeploy.textContent = "Deploying...";
 
     try {
-      const indexedContent = await window.api.readFileFromGitHub(indexFilePath);      
-      const updatedContent = `${indexedContent}\n${date},${title},${desc},${thumbnail},${credits}`;
-      await window.api.updateOnGitHub(indexFilePath, indexMessage, updatedContent);
-      console.log("Index updated successfully");
-    } catch (error) {
-      console.error("Failed to update index:", error);
-      throw new Error(`Failed to update index file ${error}`);
-    }
-
-    try {
-      await window.api.pushToGitHub(contentPath, contentMessage, content);
-      console.log(`Deployed ${contentPath} successfully!`);
+      const indexedContent = await window.api.readFileFromGitHub(indexFilePath);
+      const updatedContent = indexedContent ? `${indexedContent}\n${date},${title},${desc},${thumbnail},${credits}` : `${date},${title},${desc},${thumbnail},${credits}`;
+      
+      await window.api.deployToGitHub(contentPath, indexFilePath, content, updatedContent, contentMessage);
+      console.log("Deployed successfully in single commit!");
       
       showNotification("Deployment successful!", "success");
       deployModal.style.display = "none";
       resetDeployForm();
       
     } catch (error) {
-      console.error("Failed to deploy content:", error);
-      throw new Error("Failed to deploy content file");
+      console.error("Failed to deploy:", error);
+      throw new Error("Failed to deploy files");
     }
 
   } catch (error) {
