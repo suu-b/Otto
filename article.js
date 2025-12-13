@@ -198,9 +198,11 @@ document.addEventListener('DOMContentLoaded', async() => {
             );
 
             console.log("Deployed successfully!");
+            showNotification("Deployed Successfully :D")
             localStorage.removeItem('ottoDraft'); 
         } catch (error) {
             console.error("Failed to deploy:", error);
+            showNotification("Failed to deploy :C")
         } finally {
             deployBtn.disabled = false;
             deployBtn.textContent = "Deploy";
@@ -223,6 +225,7 @@ document.addEventListener('DOMContentLoaded', async() => {
         console.log(document.querySelector('.thumbnail-src'))
         document.querySelector('.thumbnail-src').value = ''
         document.querySelector('.thumbnail-credits').value = ''
+        showNotification("Cleared the form and memory :)")
     })
 
     function saveToLocal() {

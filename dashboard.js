@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .split('\n')
                 .slice(1)
                 .map(row => {
-                    const cols = row.split(','); 
+                    const cols = row.split(',').map(r => r.trim()).filter(Boolean);
                     return [...cols, category];
                 });
         })
@@ -58,11 +58,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function applyFilters() {
         const query = searchInput.value.toLowerCase();
-        const category = categoryFilter.value;
+        const category = categoryFilter.value || '';
 
         const filtered = rows.filter(row => {
             const matchesTitle = row[1].toLowerCase().includes(query);
-            const matchesCategory = !category || row[3] === category;
+            const matchesCategory = !category || row[5] === category;
             return matchesTitle && matchesCategory;
         });
 
