@@ -3,10 +3,13 @@ const path = require('path');
 
 const { readFileFromGitHub, updateOnGitHub, pushToGitHub, deployToGitHub } = require('./gitUtil');
 
+let win;
+let globalState = {}
+
 function createWindow() {
   const iconPath = path.join(__dirname, 'assets/otto.png');
   const icon = nativeImage.createFromPath(iconPath);
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1000,
     height: 700,
     show: false,
@@ -41,3 +44,16 @@ ipcMain.handle('push-to-github', async (event, { path, message, content }) => {
 ipcMain.handle('deploy-to-github', async (event, { contentPath, indexPath, content, indexContent, message }) => {
   return deployToGitHub(contentPath, indexPath, content, indexContent, message);
 });
+
+ipcMain.on('navigate', (event, target) => {
+  win.loadFile(target);
+});
+
+ipcMain.on('set-state', (event, { key, value }) => {
+  globalState[key] = value;
+});
+
+ipcMain.handle('get-state', (event, key) => {
+  return globalState[key];
+});
+

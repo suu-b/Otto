@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otto | Dashboard</title>
+    <link rel="stylesheet" href="global.css">
+</head>
+
+<body class="app" id="dashboard">
+    <div class="heading-create-box">
+        <h1>Dashboard</h1>
+        <div>
+            <button class="secondary back-btn" style="margin-bottom: 10px;">Back</button>
+            <button id="create-btn">Create +</button>
+        </div>        
+    </div>
+    <p>Dashboard contains list of all the deployed articles. One can view the deployed ones or can create a new one using the button given here.</p>
+    <div class="search-box">
+        <input id="search" placeholder="Search by title"/>
+        <button id="search-btn" class="primary">Search</button>
+    </div>
+    <select class="category">
+        <option value="">All categories</option>
+        <option value="cerebrum">Cerebrum</option>
+        <option value="meditation">Meditation</option>
+        <option value="humanities">Humanities</option>
+        <option value="becoming">Becoming</option>
+    </select>
+
+    <div class="items-container">
+        <div style="text-align: center;">Loading...</div>
+    </div>
+    <script>
+        document.getElementById('create-btn').onclick = async () => {
+            await window.state.set('mode', 'write');
+            window.nav.go('article.html');
+        };
+        document.querySelector('.back-btn').onclick = () => {
+            window.nav.go('index.html');
+        };
+    </script>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

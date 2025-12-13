@@ -14,3 +14,17 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke('deploy-to-github', { contentPath, indexPath, content, indexContent, message });
   }
 });
+
+contextBridge.exposeInMainWorld('nav', {
+  go: (target) => ipcRenderer.send('navigate', target)
+})
+
+contextBridge.exposeInMainWorld('state', {
+  set(key, value) {
+    ipcRenderer.send('set-state', { key, value });
+  },
+  async get(key) {
+    return await ipcRenderer.invoke('get-state', key);
+  }
+});
+
