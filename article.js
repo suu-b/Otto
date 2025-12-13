@@ -70,10 +70,12 @@ document.addEventListener('DOMContentLoaded', async() => {
     const previewBtn = document.getElementById('previewBtn');
     const publishBtn = document.getElementById('publishBtn');
     const saveBtn = document.getElementById('saveBtn');
+    const clearBtn = document.getElementById('clearBtn');
 
     previewBtn.style.display = 'block'
     publishBtn.style.display = 'block'
     saveBtn.style.display = 'block'
+    clearBtn.style.display = 'block'
 
     const deployBtn = document.getElementById('deployBtn');
     const cancelBtn = document.getElementById('cancelBtn');
@@ -160,7 +162,7 @@ document.addEventListener('DOMContentLoaded', async() => {
         const date = document.querySelector('.date').value;
         const category = document.querySelector('.category').value;
         const content = box.value;
-        const thumbnail = document.querySelector('.thumbnail').value;
+        const thumbnail = document.querySelector('.thumbnail-src').value;
         const credits = document.querySelector('.thumbnail-credits').value;
 
         const payload = { title, description, date, category, content, thumbnail, credits };
@@ -211,6 +213,18 @@ document.addEventListener('DOMContentLoaded', async() => {
         errorP.textContent = "";
     });
 
+    clearBtn.addEventListener('click', () => {
+        localStorage.setItem('ottoDraft', '')
+        heading.textContent = ""
+        document.querySelector('.article-description').value = ""
+        document.querySelector('.date').value = ""
+        box.value = ''
+        console.log(document.querySelector('.thumbnail-src').value)
+        console.log(document.querySelector('.thumbnail-src'))
+        document.querySelector('.thumbnail-src').value = ''
+        document.querySelector('.thumbnail-credits').value = ''
+    })
+
     function saveToLocal() {
         const draft = {
             heading: heading.textContent,
@@ -218,7 +232,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             date: document.querySelector('.date').value,
             category: document.querySelector('.category').value,
             content: box.value,
-            thumbnail: document.querySelector('.thumbnail').value,
+            thumbnail: document.querySelector('.thumbnail-src').value,
             credits: document.querySelector('.thumbnail-credits').value
         };
         localStorage.setItem('ottoDraft', JSON.stringify(draft));
@@ -234,7 +248,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             if (draft.date) document.querySelector('.date').value = draft.date;
             if (draft.category) document.querySelector('.category').value = draft.category;
             if (draft.content) box.value = draft.content;
-            if (draft.thumbnail) document.querySelector('.thumbnail').value = draft.thumbnail;
+            if (draft.thumbnail) document.querySelector('.thumbnail-src').value = draft.thumbnail;
             if (draft.credits) document.querySelector('.thumbnail-credits').value = draft.credits;
 
             autoGrow(box);
