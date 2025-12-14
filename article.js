@@ -70,12 +70,10 @@ document.addEventListener('DOMContentLoaded', async() => {
     const previewBtn = document.getElementById('previewBtn');
     const publishBtn = document.getElementById('publishBtn');
     const saveBtn = document.getElementById('saveBtn');
-    const clearBtn = document.getElementById('clearBtn');
 
     previewBtn.style.display = 'block'
     publishBtn.style.display = 'block'
     saveBtn.style.display = 'block'
-    clearBtn.style.display = 'block'
 
     const deployBtn = document.getElementById('deployBtn');
     const cancelBtn = document.getElementById('cancelBtn');
@@ -200,6 +198,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             console.log("Deployed successfully!");
             showNotification("Deployed Successfully :D")
             localStorage.removeItem('ottoDraft'); 
+            window.nav.go('dashboard.html')
         } catch (error) {
             console.error("Failed to deploy:", error);
             showNotification("Failed to deploy :C")
@@ -214,19 +213,6 @@ document.addEventListener('DOMContentLoaded', async() => {
         dialog.style.display = 'none';
         errorP.textContent = "";
     });
-
-    clearBtn.addEventListener('click', () => {
-        localStorage.setItem('ottoDraft', '')
-        heading.textContent = ""
-        document.querySelector('.article-description').value = ""
-        document.querySelector('.date').value = ""
-        box.value = ''
-        console.log(document.querySelector('.thumbnail-src').value)
-        console.log(document.querySelector('.thumbnail-src'))
-        document.querySelector('.thumbnail-src').value = ''
-        document.querySelector('.thumbnail-credits').value = ''
-        showNotification("Cleared the form and memory :)")
-    })
 
     function saveToLocal() {
         const draft = {
